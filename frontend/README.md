@@ -1,3 +1,2 @@
-# Instrucciones
-# ejecutar comando antes de correr el proyecto
+# Instructions
 # npm install
