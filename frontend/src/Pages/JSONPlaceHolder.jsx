@@ -164,7 +164,8 @@ export const JSONPlaceHolder = () => {
         </form>
       </dialog>
       
-      <h1>Users</h1>
+      <h1>JSON Placeholder</h1>
+      <h3>Users Content</h3>
       <button onClick={newUserClick} style={
           { 
             backgroundColor: 'blue', 
