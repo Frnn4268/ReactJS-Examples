@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 
-export const TablaSencilla = () => {
+export const JSONPlaceHolder = () => {
 
   const ENDPOINT = "https://jsonplaceholder.typicode.com/posts/";
 
@@ -14,43 +14,42 @@ export const TablaSencilla = () => {
     completed: '',
   })
 
-  const getAll =async ()=>{
+  const getAll = async () => { // Function to fetch all users from the API
     let fetchResp = await fetch(ENDPOINT)
     let dataJson = await fetchResp.json()
     setUsers(dataJson)
   }
-  useEffect(() => {
-    //useEffect vacio, significa que lo va ejecutar cuando se cargue el componente en memoria.
+  useEffect(() => { // Function to fetch all users from the API
     (async () => {
         await getAll()
     })()
   }, [])
 
-  const newUserClick = (e) => {
+  const newUserClick = (e) => { // Event handler for the "New User" button click
     e.preventDefault()
     dialogRef.current.showModal()
   }
 
-  const closeNewUserModal = (e) => {
+  const closeNewUserModal = (e) => { // Event handler for closing the "New User" modal
     e.preventDefault()
     dialogRef.current.close()
   }
 
-  const valueHasChanged = (e) => {
+  const valueHasChanged = (e) => { // Event handler for input value changes
     setCurrentUser({
       ...currentUser,
       [e.target.name]: e.target.value,
     })
   }
 
-  const formSubmit = async (e) =>{
+  const formSubmit = async (e) =>{ // Event handler for form submission
     e.preventDefault()
     if (currentUser.id <= 0){
       //Create
-      await postData(currentUser)
+      await postData(currentUser)  // Create new user 
     }
     else{
-      await updateData(currentUser)
+      await updateData(currentUser) // Update existing user
     }
     setCurrentUser({
       userId: 0,
@@ -61,7 +60,7 @@ export const TablaSencilla = () => {
     dialogRef.current.close()
   }
 
-  const postData = async (data)=>{
+  const postData = async (data) => { // Function to post new user data to the API
     let fetchResp = await fetch(ENDPOINT, {
       method: "POST",
       headers: {
@@ -74,7 +73,7 @@ export const TablaSencilla = () => {
   }
 
 
-  const updateData = async (data)=>{
+  const updateData = async (data) => { // Function to update user data in the API
     let fetchResp = await fetch(ENDPOINT + "/" + data.id, {
       method: "PUT",
       headers: {
@@ -86,12 +85,12 @@ export const TablaSencilla = () => {
       await getAll()
   }
 
-  const deleteRow = async (row)=>{
+  const deleteRow = async (row)=>{ // Function to prompt for user deletion
     setCurrentUser(row)
     dialogDeleteRef.current.showModal()
   }
 
-  const deleteData = async (row) =>{
+  const deleteData = async (row) => {  // Function to delete user data from the API
     let fetchResp = await fetch(ENDPOINT + "/" + row.id, {
       method: "DELETE",
       headers: {
@@ -102,13 +101,13 @@ export const TablaSencilla = () => {
       await getAll()
   }
 
-  const confirmDelete = async(e)=>{
+  const confirmDelete = async(e) => { // Event handler for confirming user deletion
     e.preventDefault();
     await deleteData(currentUser)
     dialogDeleteRef.current.close()
   }
 
-  const showEdit = (row)=>{
+  const showEdit = (row) => { // Function to show the edit modal
     setCurrentUser(row)
     dialogRef.current.showModal()
   }
@@ -116,7 +115,7 @@ export const TablaSencilla = () => {
   return (
     <>
       <dialog ref={dialogRef}>
-        <h4>Nuevo usuario</h4>
+        <h4>New User</h4>
         <form onSubmit={formSubmit} className="w3-container">
           <label htmlFor="userid">userId</label>
           <input
@@ -156,16 +155,27 @@ export const TablaSencilla = () => {
           />
           <div className="w3-row">
             <div className="w3-col m4">
-              <button type="submit" className="w3-button w3-green">Guardar</button>         
+              <button type="submit" className="w3-button w3-green">Save</button>         
             </div>
             <div className="w3-col m4">
-              <button className="w3-button w3-red" onClick={closeNewUserModal}>Cerrar</button>
+              <button className="w3-button w3-red" onClick={closeNewUserModal}>Close</button>
             </div>
           </div>
         </form>
       </dialog>
-      <button onClick={newUserClick} >Nuevo usuario</button>
+      
       <h1>Users</h1>
+      <button onClick={newUserClick} style={
+          { 
+            backgroundColor: 'blue', 
+            color: 'white', 
+            borderRadius: '5px', 
+            borderColor: 'blue',
+            padding: '5px 10px', 
+            margin: '10px 0',
+            fontSize: '18px'
+          }
+        }>New User</button>
       <table className="w3-table w3-striped w3-bordered w3-border">
         <thead>
           <tr>
@@ -173,7 +183,7 @@ export const TablaSencilla = () => {
             <th>id</th>
             <th>title</th>
             <th>body</th>
-            <th>Acciones</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -184,8 +194,8 @@ export const TablaSencilla = () => {
               <td>{row.title}</td>
               <td>{row.body}</td>
               <td>
-                <button className="w3-button w3-yellow" onClick={(e)=> { showEdit(row) }}>Editar</button>
-                <button className="w3-button w3-red" onClick={(e)=> {deleteRow(row)}}>Borrar</button>
+                <button className="w3-button w3-yellow" onClick={(e)=> { showEdit(row) }}>Edit</button>
+                <button className="w3-button w3-red" onClick={(e)=> {deleteRow(row)}}>Delete</button>
               </td>
             </tr>
           ))}
@@ -193,10 +203,10 @@ export const TablaSencilla = () => {
       </table>
 
       <dialog ref={dialogDeleteRef}>
-        <h4>Confirmación de borrado</h4>
+        <h4>Delete confirmation</h4>
         <form onSubmit={confirmDelete} className="w3-container">
            
-            Esta seguro que desea eliminar a {currentUser.title}
+            Are you sure you want to delete {currentUser.title}
             <div className='w3-row'>
               <div className='w3-col m6'>
                 <button className="w3-button w3-red" type="submit">Confirmar</button>
@@ -205,7 +215,7 @@ export const TablaSencilla = () => {
                   <button className="w3-button w3-blue" onClick={(e)=>{
                   e.preventDefault()
                   dialogDeleteRef.current.close()
-                }} >Cancelar</button>
+                }} >Cancel</button>
               </div>
             </div>
         </form>

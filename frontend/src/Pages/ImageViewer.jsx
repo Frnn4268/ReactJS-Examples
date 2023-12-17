@@ -1,53 +1,56 @@
 import { useState } from 'react';
+import '../css/ImageViewer.css'; // Import the CSS file for styling
 
-const ImageViewer = ({ imagenes }) => {
+const ImageViewer = ({ images }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState(1);
 
   const handlePrevImage = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : prevIndex));
   };
 
   const handleNextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex < imagenes.length - 1 ? prevIndex + 1 : prevIndex));
+    setCurrentImageIndex((prevIndex) => (prevIndex < images.length - 1 ? prevIndex + 1 : prevIndex));
   };
 
   const handleImageClick = () => {
     setIsZoomed(!isZoomed);
   };
 
-  const closeZoomedView = () => {
-    setIsZoomed(false);
+  const handleZoomIn = () => {
+    setZoomLevel((prevZoom) => prevZoom + 0.1);
+  };
+
+  const handleZoomOut = () => {
+    setZoomLevel((prevZoom) => Math.max(prevZoom - 0.1, 0.1));
   };
 
   return (
     <div className="image-viewer">
-      <div className="image-container">
+      <div className={`image-container ${isZoomed ? 'zoomed' : ''}`}>
         <img
-          src={imagenes[currentImageIndex]}
-          alt={`Imagen ${currentImageIndex + 1}`}
+          src={images[currentImageIndex]}
+          alt={`Image ${currentImageIndex + 1}`}
           onClick={handleImageClick}
+          style={{ transform: `scale(${zoomLevel})` }}
         />
+        {isZoomed && (
+          <div className="zoom-buttons">
+            <button onClick={handleZoomIn}>+</button>
+            <button onClick={handleZoomOut}>-</button>
+          </div>
+        )}
       </div>
       <div className="image-nav">
-        <button onClick={handlePrevImage} disabled={currentImageIndex === 0}>
-          Anterior
+        <button onClick={handleNextImage} disabled={currentImageIndex === images.length - 1}>
+          Next
         </button>
-        <span>{`${currentImageIndex + 1} / ${imagenes.length}`}</span>
-        <button onClick={handleNextImage} disabled={currentImageIndex === imagenes.length - 1}>
-          Siguiente
+        <span>{`${currentImageIndex + 1} / ${images.length}`}</span>
+        <button onClick={handlePrevImage} disabled={currentImageIndex === 0}>
+          Back
         </button>
       </div>
-      {isZoomed && (
-        <div className="image-modal" onClick={closeZoomedView}>
-          <div className="image-zoom">
-            <img
-              src={imagenes[currentImageIndex]}
-              alt={`Imagen ${currentImageIndex + 1}`}
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 };

@@ -4,15 +4,21 @@ export const Layout =()=>{
 
     return(
         <div>
-            <NavLink to="/TablaSencilla">
-            TablaSencilla
-            </NavLink>
-            <NavLink to="/Gallery">
-            Gallery
-            </NavLink>
-            <NavLink to="/Form">
-            Form
-            </NavLink>
+            <li>
+                <NavLink to="/JsonPlaceHolder">
+                    JSON Placeholder
+                </NavLink>
+            </li> 
+            <li>
+                <NavLink to="/Gallery">
+                    Images Gallery
+                </NavLink>
+            </li>
+            <li>
+                <NavLink to="/DynamicForm">
+                    Simply Dynamic Form
+                </NavLink>
+            </li>
             <Outlet/>
         </div>
     )
